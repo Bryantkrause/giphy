@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <form>
+    <label for="person">Person:</label>
+    <input id="newPerson" type="text">
+    <button id="addPerson">Add Person</button>
+  </form>
+  <div id="buttons">
+    <button class="person" data-person="Rick Sanchez">Rick Sanchez</button>
+    <button class="person" data-person="Barney Stinson">Barney Stinson</button>
+    <button class="person" data-person="Hunter Thompson">Hunter Thompson</button>
+    <button class="person" data-person="Clint Eastwood">Clint Eastwood</button>
+  </div>
+
+  <div id="gifDisp"></div>
+
+  <script>
+
+    document.addEventListener('click', event => {
+      if (event.target.className === 'person') {
+        let person = event.target.dataset.person
+
+        let url = `https://api.giphy.com/v1/gifs/search?q=${person}&api_key=dc6zaTOxFJmzC&limit=10`
+
+        fetch(url)
+          .then(r => r.json())
+          .then(gifs => {
+            console.log(gifs)
+            document.getElementById('gifDisp').innerHTML = ''
+            gifs.data.forEach(gif => {
+              let gifElem = document.createElement('img')
+              // currently displayed gif
+              gifElem.src = gif.images.original_still.url
+              // link to the still version
+              gifElem.dataset.still = gif.images.original_still.url
+              // link to the animated version
+              gifElem.dataset.animated = gif.images.original.url
+              // if the gif is animated
+              gifElem.dataset.isanimated = false
+              // set gif class
+              gifElem.className = 'gif'
+
+              document.getElementById('gifDisp').append(gifElem)
+            })
+          })
+      } else if (event.target.className === 'gif') {
+        if (event.target.isanimated === 'true') {
+          event.target.src = event.target.dataset.still
+          event.target.isanimated = 'false'
+        } else {
+          event.target.src = event.target.dataset.animated
+          event.target.isanimated = 'true'
+        }
+      }
+    })
+
+    document.getElementById('addPerson').addEventListener('click', event => {
+      event.preventDefault()
+      let btnElem = document.createElement('button')
+      btnElem.textContent = document.getElementById('newPerson').value
+      btnElem.dataset.person = document.getElementById('newPerson').value
+      btnElem.className = 'person'
+      document.getElementById('buttons').append(btnElem)
+      document.getElementById('newPerson').value = ''
+    })
+
+
+
+
+
+  </script>
+</body>
+
+</html>
