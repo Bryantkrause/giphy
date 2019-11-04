@@ -2,12 +2,11 @@ document.addEventListener('click', event => {
     if (event.target.className === 'person') {
       let person = event.target.dataset.person
 
-      let url = `https://api.giphy.com/v1/gifs/search?q=${person}&api_key=UdqUUlM9Mn9gG96v2hsMUu0CEWY8ievj&limit=10`
+      let url = (`https://api.giphy.com/v1/gifs/search?q=${person}&api_key=V0xcB2doMH8Sa9wI4j8z9xvpO5R2GiBI&limit=10`)
 
       fetch(url)
         .then(r => r.json())
         .then(gifs => {
-          console.log(gifs)
           document.getElementById('gifDisp').innerHTML = ''
           gifs.data.forEach(gif => {
             let gifElem = document.createElement('img')
